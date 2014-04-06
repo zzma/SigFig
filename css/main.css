@@ -1,0 +1,126 @@
+*:active {
+    cursor: pointer;
+}
+
+/* Style for line chart */
+body {
+    font: 14px sans-serif;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path, .x.axis line {
+    /*display: none;*/
+}
+
+.y.axis {
+    opacity: 0;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+circle.dot {
+    opacity: 1;
+
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+circle.dot:hover {
+    cursor: pointer;
+}
+circle.dot:active {
+    cursor: pointer;
+}
+
+
+.cal_intake {
+    stroke: red;
+}
+.dot.cal_intake {
+    fill: red;
+}
+.weight {
+    stroke: purple;
+}
+.dot.weight {
+    fill: purple;
+}
+
+.sleep {
+    stroke: orange;
+}
+.dot.sleep {
+    fill: orange;
+}
+.cals_burned {
+    stroke: steelblue;
+}
+.dot.cals_burned {
+    fill: steelblue;
+}
+
+.legend-item text {
+    cursor: pointer;
+    opacity: 1;
+
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+.legend-item text.inactive {
+    opacity: 0.4;
+}
+.line.fade {
+    opacity: 0.1;
+}
+circle.dot.fade {
+    opacity: 0.1;
+}
+
+
+/* Style for Pie Chart */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    width: 500px;
+    height: 300px;
+    position: relative;
+}
+
+path.slice{
+    stroke-width:2px;
+}
+
+polyline{
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+}
+
+.slice.cal_intake {
+    fill: red;
+}
+.slice.cals_burned {
+    fill: steelblue;
+}
+.slice.weight {
+    fill: purple;
+}
+.slice.sleep {
+    fill: orange;
+}

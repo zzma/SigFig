@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translated Health Demo</title>
+
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+<script type="text/javascript" src="js/d3.min.js"></script>
+<script type="text/javascript" src="js/pie-chart.js"></script>
+<script type="text/javascript" src="js/multi-line-graph.js"></script>
+<!--<script type="text/javascript" src="js/line-graph.js"></script>-->
+
+<!--<button class="randomize">Randomize</button>-->
+
+<script type="text/javascript">
+    function getDataFromCsv(filename, callback) {
+        var dataSet = [];
+
+        var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+        var parseName = function(name){
+            var s = name.split('_');
+            var niceName = "";
+
+            console.log(name);
+            for (var i = 0; i < s.length; i++) {
+                niceName += s[i].charAt(0) + s[i].slice(1) + " ";
+            }
+
+            return niceName;
+        }
+        d3.csv(filename, function(e,d){
+
+            var columnNameToIndex = {}, index = 0;
+            for (var key in d[0]){
+                if (key.toLowerCase() != "date") {
+                    columnNameToIndex[key] = index++;
+                    dataSet.push({
+                        name: key,
+                        yAxisLabel: parseName(key),
+                        data: []
+                    });
+                }
+            }
+
+            d.forEach(function(dataRow){
+                for (var key in dataRow){
+                    var date = parseDate(dataRow["date"]);
+
+                    if (key.toLowerCase() != "date") {
+                        //Add a {date: <Date>, value: <integer>} field to each data set
+                        dataSet[columnNameToIndex[key]].data.push({
+                            date: date,
+                            value: parseFloat(dataRow[key])
+                        });
+                    }
+                }
+            });
+
+            callback(dataSet);
+
+        });
+
+    }
+
+    function generateRandomDataSet(size, low, range, setCount) {
+        var randomDataSet = [];
+        for (var i = 0; i < setCount; i++) {
+            var startDate = new Date();
+            var randomData = [];
+            for (var j = 0; j < size; j++) {
+                randomData.push({
+                    date: new Date(startDate.getTime() + (j * 24 * 60 * 60 * 1000)),
+                    value: (Math.random() * range) + low
+                });
+            }
+            randomDataSet.push({
+                name: "Name" + i,
+                yAxisLabel: "Label" + i,
+                data: randomData
+            });
+        }
+
+        return randomDataSet;
+    }
+
+    function generatePieChartData(dataSet){
+        var pieData = [];
+        dataSet.forEach(function(dataItem){
+            pieData.push({
+                label: dataItem.name,
+                value: d3.sum(dataItem.data, function(d){ return d.value; })
+            });
+        });
+        return pieData;
+    }
+
+    function updateFormulaData(dataSet) {
+        dataSet.forEach(function(dataItem){
+
+        });
+    }
+
+//    var baseData = generateRandomDataSet(10, 0, 100, 2);
+    var baseData;
+    getDataFromCsv("/data/all-5-months.csv", function(d){
+        baseData = d;
+        createPieChart(generatePieChartData(baseData));
+        createMultiLineGraph(baseData);
+    });
+
+    function refreshPie(){
+        updatePieChart(generatePieChartData(baseData));
+    }
+
+
+
+//    setTimeout(function(){
+//        var date = new Date();
+//        transitionTime(date, new Date(date.getTime() + (20*24*60*60*1000)));
+//    }, 3000);
+</script>
+
+</body>
+</html>
