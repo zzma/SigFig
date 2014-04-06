@@ -9,10 +9,24 @@
 <script type="text/javascript" src="js/d3.min.js"></script>
 <script type="text/javascript" src="js/pie-chart.js"></script>
 <script type="text/javascript" src="js/multi-line-graph.js"></script>
+<script type="text/javascript" src="js/predictive-graph.js"></script>
 <!--<script type="text/javascript" src="js/line-graph.js"></script>-->
 
 <!--<button class="randomize">Randomize</button>-->
+<div>
+    (1) The holiday binge reversed your weight loss. You gained 1.2 lbs as a result!
+    You upped your exercise Jan through March. Great Job! It helped you maintain weight in March.
 
+</div>
+<div style="top: 300px; background-color: #add8e6;">
+    (2) 6.5 hours of sleep seems to be the threshold for you. Sleeping below average last week led to a 1.1 lb gain this week.
+    Next week, try for at least 7 hours a night.
+
+</div>
+<div style="top: 600px; background-color: lightgoldenrodyellow">
+    (3)
+    Next week, if you sleep on average 7 hours a night, you may lose 0.6 lbs!
+</div>
 <script type="text/javascript">
     function getDataFromCsv(filename, callback) {
         var dataSet = [];
@@ -22,7 +36,6 @@
             var s = name.split('_');
             var niceName = "";
 
-            console.log(name);
             for (var i = 0; i < s.length; i++) {
                 niceName += s[i].charAt(0) + s[i].slice(1) + " ";
             }
@@ -95,30 +108,45 @@
         return pieData;
     }
 
-    function updateFormulaData(dataSet) {
-        dataSet.forEach(function(dataItem){
-
+    function updateFormulaData(delta, dataSet) {
+        dataSet[1].data.forEach(function(d){
+            d.value += (delta / 2000);
         });
     }
 
 //    var baseData = generateRandomDataSet(10, 0, 100, 2);
-    var baseData;
+    var     baseData;
+    var predictiveData;
+
+
     getDataFromCsv("/data/all-5-months.csv", function(d){
         baseData = d;
-        createPieChart(generatePieChartData(baseData));
+//        createPieChart(generatePieChartData(baseData));
         createMultiLineGraph(baseData);
     });
 
-    function refreshPie(){
-        updatePieChart(generatePieChartData(baseData));
+    getDataFromCsv("/data/weight-sleep-2-weeks.csv", function(d){
+        predictiveData = d;
+        createPredictiveGraph(d);
+    });
+
+    function updatePrediction(delta) {
+        updateFormulaData(delta, predictiveData);
+        predictiveData.forEach(function(d){
+            updatePredictiveGraph(d);
+        });
+//        updatePredictiveGraph(predictiveData);
     }
 
 
 
 //    setTimeout(function(){
 //        var date = new Date();
-//        transitionTime(date, new Date(date.getTime() + (20*24*60*60*1000)));
+//        var startDate = new Date(date.getTime() - (90*24*60*60*1000));
+//        transitionTime(startDate, new Date(startDate.getTime() + (80*24*60*60*1000)));
 //    }, 3000);
+
+
 </script>
 
 </body>

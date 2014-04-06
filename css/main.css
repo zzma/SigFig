@@ -49,29 +49,29 @@ circle.dot:active {
 
 
 .cal_intake {
-    stroke: red;
+    stroke: green;
 }
 .dot.cal_intake {
-    fill: red;
+    fill: green;
 }
 .weight {
-    stroke: purple;
+    stroke: red;
 }
 .dot.weight {
-    fill: purple;
+    fill: red;
 }
 
 .sleep {
-    stroke: orange;
-}
-.dot.sleep {
-    fill: orange;
-}
-.cals_burned {
     stroke: steelblue;
 }
-.dot.cals_burned {
+.dot.sleep {
     fill: steelblue;
+}
+.cals_burned {
+    stroke: orange;
+}
+.dot.cals_burned {
+    fill: orange;
 }
 
 .legend-item text {
@@ -92,15 +92,6 @@ circle.dot.fade {
     opacity: 0.1;
 }
 
-
-/* Style for Pie Chart */
-body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    width: 500px;
-    height: 300px;
-    position: relative;
-}
-
 path.slice{
     stroke-width:2px;
 }
@@ -113,14 +104,25 @@ polyline{
 }
 
 .slice.cal_intake {
-    fill: red;
+    fill: green;
 }
 .slice.cals_burned {
-    fill: steelblue;
+    fill: orange;
 }
 .slice.weight {
-    fill: purple;
+    fill: red;
 }
 .slice.sleep {
-    fill: orange;
+    fill: steelblue;
+}
+
+div {
+    position: absolute;
+    margin-left: 900px;
+    margin-right: 20px;
+
+    padding: 20px;
+
+    border-radius: 5px;
+    border: 1px solid black;
 }

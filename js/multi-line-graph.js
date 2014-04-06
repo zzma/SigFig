@@ -16,8 +16,8 @@ function createMultiLineGraph(dataSet) {
     _mlg.yHash = {};
     _mlg.dataSet = dataSet;
     _mlg.margin = {top: 20, right: 120, bottom: 30, left: 50};
-    _mlg.width = 700 - _mlg.margin.left - _mlg.margin.right,
-    _mlg.height = 300 - _mlg.margin.top - _mlg.margin.bottom;
+    _mlg.width = 900 - _mlg.margin.left - _mlg.margin.right,
+    _mlg.height = 450 - _mlg.margin.top - _mlg.margin.bottom;
 
     _mlg.x = d3.time.scale()
         .range([0, _mlg.width]);
@@ -59,9 +59,9 @@ function createMultiLineGraph(dataSet) {
     //Define drag handler
     var drag = d3.behavior.drag()
         .origin(function(d) { return d; })
-        .on("dragstart", onDragStart)
-        .on("drag", onDrag)
-        .on("dragend", onDragEnd);
+        .on("dragstart", _mlg.onDragStart)
+        .on("drag", _mlg.onDrag)
+        .on("dragend", _mlg.onDragEnd);
 
 
     //Handle everything for y-axis (data dependent)
@@ -106,8 +106,8 @@ function createMultiLineGraph(dataSet) {
             .attr("r", 4)
             .attr("cx", _mlg.xMap)
             .attr("cy", yMap)
-            .on("mouseover", onMouseOver)
-            .on("mouseout", onMouseOut)
+            .on("mouseover", _mlg.onMouseOver)
+            .on("mouseout", _mlg.onMouseOut)
             .call(drag);
 
         // add id field to data points
@@ -128,9 +128,9 @@ function createMultiLineGraph(dataSet) {
             .attr("transform", "translate(10," + (index * 30) + ")")
             .append("text")
             .text(dataItem.yAxisLabel.charAt(0).toUpperCase() + dataItem.yAxisLabel.slice(1))
-            .on("click", legendClick)
-            .on("mouseover", legendMouseOver)
-            .on("mouseout", legendMouseOut);
+            .on("click", _mlg.legendClick)
+            .on("mouseover", _mlg.legendMouseOver)
+            .on("mouseout", _mlg.legendMouseOut);
     })
 }
 function updateMultiLineGraph(dataItem) {
@@ -156,49 +156,48 @@ function transitionTime(minDate, maxDate) {
     });
 }
 
-function onDragStart(d) {
+
+_mlg.onDragStart = function (d) {
     d3.event.sourceEvent.stopPropagation();
     d3.select(this).classed("dragging", true);
 }
-function onDrag(d) {
+_mlg.onDrag = function(d) {
     var dataItem = _mlg.dataSet[d.ind.split('-')[0]];
     var y = _mlg.yHash[dataItem.name];
     d.value += (y.invert(d3.event.dy) - y.invert(0));
     dataItem.data[d.ind.split('-')[1]].value = d.value;
-    updateMultiLineGraph(dataItem);
-    refreshPie();
+    updatePredictiveGraph(dataItem);
     d3.event.sourceEvent.stopPropagation();
 }
-function onDragEnd(d) {
+_mlg.onDragEnd = function(d) {
     d3.select(this).classed("dragging", false);
 }
-function onMouseOver(d) {
+_mlg.onMouseOver = function(d) {
     var name = _mlg.dataSet[d.ind.split('-')[0]].name;
-    d3.selectAll(".y.axis" + "." + name).style("opacity", 1);
+    _mlg.svg.selectAll(".y.axis" + "." + name).style("opacity", 1);
 }
-function onMouseOut(d) {
+_mlg.onMouseOut = function(d) {
     var name = _mlg.dataSet[d.ind.split('-')[0]].name;
-    d3.selectAll(".y.axis" + "." + name).style("opacity", 0);
+    _mlg.svg.selectAll(".y.axis" + "." + name).style("opacity", 0);
 }
-function legendClick(d, i) {
+_mlg.legendClick = function(d, i) {
     var className = "." + this.textContent.trim().replace(/\s+/g, '_').toLowerCase();
     console.log(className);
     if (d3.select(this).classed("inactive")) {
         d3.select(this).classed("inactive", false);
-        d3.selectAll(".line" + className).classed("fade", false);
-        d3.selectAll(".dot" + className).classed("fade", false);
+        _mlg.svg.selectAll(".line" + className).classed("fade", false);
+        _mlg.svg.selectAll(".dot" + className).classed("fade", false);
     } else {
         d3.select(this).classed("inactive", true);
-        d3.selectAll(".line" + className).classed("fade", true);
-        d3.selectAll(".dot" + className).classed("fade", true);
+        _mlg.svg.selectAll(".line" + className).classed("fade", true);
+        _mlg.svg.selectAll(".dot" + className).classed("fade", true);
     }
 }
-function legendMouseOver(d, i) {
+_mlg.legendMouseOver = function(d, i) {
     var className = "." + this.textContent.trim().replace(/\s+/g, '_').toLowerCase();
-    console.log(className);
-    d3.selectAll(".y.axis" + className).style("opacity", 1);
+    _mlg.svg.selectAll(".y.axis" + className).style("opacity", 1);
 }
-function legendMouseOut(d, i) {
+_mlg.legendMouseOut = function(d, i) {
     var className = "." + this.textContent.trim().replace(/\s+/g, '_').toLowerCase();
-    d3.selectAll(".y.axis" + className).style("opacity", 0);
+    _mlg.svg.selectAll(".y.axis" + className).style("opacity", 0);
 }
